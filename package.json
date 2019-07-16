@@ -3,12 +3,22 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node -r esm ./bin/www",
+    "dev": "npx nodemon --exec 'node -r esm bin/www'"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "esm": "^3.2.25",
     "express": "~4.16.1",
     "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-standard": "^13.0.1",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "nodemon": "^1.19.1"
   }
 }
