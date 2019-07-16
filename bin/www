@@ -4,11 +4,12 @@
  * Module dependencies.
  */
 
-import app from '../app'
+import {} from 'dotenv/config'
 import log from 'debug'
 import http from 'http'
+import app from '../app'
 
-const debug = log('express:server')
+const debug = log('express-starter:server')
 
 /**
  * Get port from environment and store in Express.

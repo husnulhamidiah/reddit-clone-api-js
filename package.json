@@ -1,6 +1,6 @@
 {
-  "name": "express",
-  "version": "0.0.0",
+  "name": "express-starter",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node -r esm ./bin/www",
@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "debug": "~2.6.9",
+    "dotenv": "^8.0.0",
     "esm": "^3.2.25",
     "express": "~4.16.1",
+    "mongoose": "^5.6.4",
     "morgan": "~1.9.1"
   },
   "devDependencies": {
@@ -20,5 +22,9 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "nodemon": "^1.19.1"
-  }
+  },
+  "main": "bin/www",
+  "author": "Husnul Anwari <husnulhamidiah@gmail.com>",
+  "license": "MIT",
+  "description": ""
 }
