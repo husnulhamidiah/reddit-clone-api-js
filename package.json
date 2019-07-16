@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node -r esm ./bin/www",
-    "dev": "npx nodemon --exec 'node -r esm bin/www'"
+    "start": "node -r esm index.js",
+    "dev": "npx nodemon --exec 'DEBUG=express-starter:* node -r esm index.js'"
   },
   "dependencies": {
     "debug": "~2.6.9",
@@ -23,7 +23,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "nodemon": "^1.19.1"
   },
-  "main": "bin/www",
+  "main": "index.js",
   "author": "Husnul Anwari <husnulhamidiah@gmail.com>",
   "license": "MIT",
   "description": ""
