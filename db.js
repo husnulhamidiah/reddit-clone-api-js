@@ -1,7 +1,14 @@
 import mongoose from 'mongoose'
-import log from './utils/log'
-import config from './config'
+import log from 'debug'
 
-mongoose.connect(config.db.prod, config.db.options)
-mongoose.connection.on('connected', () => log.db('successfully connected to db'))
+const debug = log('express-starter:db')
+
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  reconnectTries: Number.MAX_VALUE,
+  reconnectInterval: 500
+})
+mongoose.connection.on('connected', () => debug('successfully connected to db'))
 mongoose.connection.on('error', console.error)
