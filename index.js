@@ -3,6 +3,8 @@ import http from 'http'
 import express from 'express'
 import logger from 'morgan'
 import log from 'debug'
+import passport from 'passport'
+import localStrategy from './auth/local'
 import routes from './routes'
 import './db'
 
@@ -17,6 +19,9 @@ app.set('port', port)
 app.use(logger('dev', { stream: { write: msg => debug(msg.trimEnd()) } }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+passport.use(localStrategy)
+
 app.use(routes)
 
 const server = http.createServer(app)

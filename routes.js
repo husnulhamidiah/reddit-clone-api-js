@@ -21,10 +21,10 @@ const wrap = fn => (...args) => fn(...args).catch(args[2])
 
 const router = Router()
 
-router.post('/login', validate(users.validation()), wrap(users.login))
+router.post('/login', validate(users.validation()), users.login)
 router.post('/register', validate(users.validation('register')), wrap(users.register))
 
 router.use('*', (req, res) => res.status(404).json({ message: 'not found' }))
-router.use((err, req, res, next) => res.status(500).json({ error: [{ [err.name]: err.message }] }))
+router.use((err, req, res, next) => res.status(500).json({ errors: err.message }))
 
 export default router

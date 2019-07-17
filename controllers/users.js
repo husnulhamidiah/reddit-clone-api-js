@@ -7,14 +7,10 @@ export const login = (req, res, next) => {
 }
 
 export const register = async (req, res, next) => {
-  try {
-    const { username, password } = req.body
-    const user = await User.create({ username, password })
-    const token = createAuthToken(user.toJSON())
-    res.status(201).json({ token })
-  } catch (err) {
-    next(err)
-  }
+  const { username, password } = req.body
+  const user = await User.create({ username, password })
+  const token = createAuthToken(user.toJSON())
+  res.status(201).json({ token })
 }
 
 export const validation = method => {
