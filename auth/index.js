@@ -19,8 +19,13 @@ export const localAuth = (req, res, next) => {
 export const jwtAuth = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
     if (err) return next(err)
-    if (!user) return res.status(401).json({ message: 'unauthorized' })
+    if (!user) return res.status(401).end()
     req.user = user
     next()
   })(req, res)
+}
+
+export const postAuth = (req, res, next) => {
+  if (req.post.author._id.equals(req.user.id) || req.user.admin) return next()
+  res.status(401).end()
 }

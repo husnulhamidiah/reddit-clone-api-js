@@ -1,28 +1,25 @@
 import { Router } from 'express'
-import { validationResult } from 'express-validator'
+import { jwtAuth, postAuth } from './auth'
 import users from './controllers/users'
+import posts from './controllers/posts'
 
-// import { jwtAuth, postAuth, commentAuth } from './auth'
-const errorFormatter = ({ msg, param, location }) => ({ [param]: `${param} on ${location} ${msg}` })
-
-const validate = (validations) => {
-  return async (req, res, next) => {
-    await Promise.all(validations.map(validation => validation.run(req)))
-
-    const errors = validationResult(req).formatWith(errorFormatter)
-    if (errors.isEmpty()) return next()
-
-    res.status(422).json({ errors: errors.array({ onlyFirstError: true }) })
-  }
-}
-
-// refs : https://expressjs.com/en/advanced/best-practice-performance.html#use-promises
 const wrap = fn => (...args) => fn(...args).catch(args[2])
 
 const router = Router()
 
-router.post('/login', validate(users.validation()), users.login)
-router.post('/register', validate(users.validation('register')), wrap(users.register))
+router.post('/login', users.validate, users.login)
+router.post('/register', users.validate, wrap(users.register))
+
+router.param('post', posts.load)
+router.get('/posts', posts.list)
+router.get('/posts/:category', posts.listByCategory)
+router.get('/post/:post', posts.show)
+router.post('/posts', jwtAuth, posts.validate, wrap(posts.create))
+router.delete('/post/:post', jwtAuth, postAuth, posts.destroy)
+router.get('/post/:post/upvote', jwtAuth, posts.upvote)
+router.get('/post/:post/downvote', jwtAuth, posts.downvote)
+router.get('/post/:post/unvote', jwtAuth, posts.unvote)
+router.get('/user/:user', posts.listByUser)
 
 router.use('*', (req, res) => res.status(404).json({ message: 'not found' }))
 router.use((err, req, res, next) => res.status(500).json({ errors: err.message }))

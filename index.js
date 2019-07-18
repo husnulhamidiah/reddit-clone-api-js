@@ -5,6 +5,7 @@ import logger from 'morgan'
 import log from 'debug'
 import passport from 'passport'
 import localStrategy from './auth/local'
+import jwtStrategy from './auth/jwt'
 import routes from './routes'
 import './db'
 
@@ -21,6 +22,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 passport.use(localStrategy)
+passport.use(jwtStrategy)
 
 app.use(routes)
 
