@@ -4,6 +4,7 @@ import express from 'express'
 import logger from 'morgan'
 import log from 'debug'
 import passport from 'passport'
+import cors from 'cors'
 import localStrategy from './auth/local'
 import jwtStrategy from './auth/jwt'
 import routes from './routes'
@@ -21,10 +22,15 @@ app.use(logger('dev', { stream: { write: msg => debug(msg.trimEnd()) } }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+app.use(cors({
+  origin: '*',
+  optionsSuccessStatus: 200
+}))
+
 passport.use(localStrategy)
 passport.use(jwtStrategy)
 
-app.use(routes)
+app.use('/api', routes)
 
 const server = http.createServer(app)
 

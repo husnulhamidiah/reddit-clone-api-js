@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import { jwtAuth, postAuth } from './auth'
+import { jwtAuth, postAuth, commentAuth } from './auth'
 import users from './controllers/users'
 import posts from './controllers/posts'
+import comments from './controllers/comments'
 
 const wrap = fn => (...args) => fn(...args).catch(args[2])
 
@@ -20,6 +21,10 @@ router.get('/post/:post/upvote', jwtAuth, posts.upvote)
 router.get('/post/:post/downvote', jwtAuth, posts.downvote)
 router.get('/post/:post/unvote', jwtAuth, posts.unvote)
 router.get('/user/:user', posts.listByUser)
+
+router.param('comment', comments.load)
+router.post('/post/:post', jwtAuth, comments.validate, comments.create)
+router.delete('/post/:post/:comment', jwtAuth, commentAuth, comments.destroy)
 
 router.use('*', (req, res) => res.status(404).json({ message: 'not found' }))
 router.use((err, req, res, next) => res.status(500).json({ errors: err.message }))
