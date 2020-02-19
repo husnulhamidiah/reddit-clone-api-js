@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")/.."
+. .env
+. $HOME/.bashrc
+. "$NVM_DIR/nvm.sh" && nvm use v12
+
+host=$HOST_DOMAIN
+name=$HOST_PATH
+project=$HOST_PROJECT
+
+node -v
+npm -v
+
+echo "current name: $name"
+
+cd $HOME/www/${name}/${project}
+#npm i
+#if [[ $name == 'puump' ]]; then
+#npm run restart
+CURRENT_UID=$(id -u):$(id -g) docker-compose pull
+#CURRENT_UID=$(id -u):$(id -g) docker-compose down
+CURRENT_UID=$(id -u):$(id -g) docker-compose up --build -d
+#fi

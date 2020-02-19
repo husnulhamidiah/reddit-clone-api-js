@@ -3,10 +3,13 @@ import log from 'debug'
 
 const debug = log('express-starter:db')
 
-mongoose.connect(process.env.DATABASE_URL, {
+console.log(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, {
+	keepAlive: true,
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+	useUnifiedTopology: true,
   reconnectTries: Number.MAX_VALUE,
   reconnectInterval: 500
 })

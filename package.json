@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node -r esm index.js",
-    "dev": "npx nodemon --exec 'DEBUG=express-starter:* node -r esm index.js'"
+    "deploy": "npm run set:prod && ./bin/deploy.sh",
+    "set:dev": "rm -f .env && ln -s .env.dev .env",
+    "set:prod": "rm -f .env && ln -s .env.prod .env",
+    "start": "npx pm2-runtime processes.json",
+    "dev": "npm run set:dev && docker-compose up --build"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -19,7 +22,8 @@
     "morgan": "~1.9.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "pm2": "^4.2.3"
   },
   "devDependencies": {
     "eslint": "^6.0.1",

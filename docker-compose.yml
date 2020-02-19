@@ -1,6 +1,33 @@
-version: '2'
+version: "3"
 services:
-  mongo:
-    image: mongo:latest
+  api:
+    container_name: upvotocracy-api
+    restart: always
+    build: .
+    env_file: .env
     ports:
-      - ${MONGO_PORT}:27017
+      - "8536:8700"
+      - "9228:9229"
+    links:
+      - mongo
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./index.js:/usr/src/app/index.js
+      - ./.env:/usr/src/app/.env
+    networks:
+      - upvotocracy-network
+  mongo:
+    container_name: upvotocracy-mongo
+    image: mongo:latest
+    env_file: .env
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "28016:27017"
+    networks:
+      - upvotocracy-network
+networks:
+  upvotocracy-network:
+    driver: bridge
+volumes:
+  mongo_data: {}
