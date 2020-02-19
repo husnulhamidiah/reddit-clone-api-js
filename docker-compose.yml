@@ -6,7 +6,7 @@ services:
     build: .
     env_file: .env
     ports:
-      - "8536:8700"
+      - "8536:8536"
       - "9228:9229"
     links:
       - mongo

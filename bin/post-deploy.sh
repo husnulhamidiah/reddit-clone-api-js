@@ -15,10 +15,6 @@ npm -v
 echo "current name: $name"
 
 cd $HOME/www/${name}/${project}
-#npm i
-#if [[ $name == 'puump' ]]; then
-#npm run restart
 CURRENT_UID=$(id -u):$(id -g) docker-compose pull
-#CURRENT_UID=$(id -u):$(id -g) docker-compose down
-CURRENT_UID=$(id -u):$(id -g) docker-compose up --build -d
-#fi
+CURRENT_UID=$(id -u):$(id -g) docker-compose build
+CURRENT_UID=$(id -u):$(id -g) docker-compose up -d

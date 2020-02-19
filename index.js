@@ -30,7 +30,7 @@ app.use(cors({
 passport.use(localStrategy)
 passport.use(jwtStrategy)
 
-app.use('/api', routes)
+app.use('/api/1', routes)
 
 const server = http.createServer(app)
 
