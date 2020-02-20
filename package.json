@@ -7,10 +7,13 @@
     "set:dev": "rm -f .env && ln -s .env.dev .env",
     "set:prod": "rm -f .env && ln -s .env.prod .env",
     "start": "npx pm2-runtime processes.json",
-    "dev": "npm run set:dev && docker-compose up --build"
+    "dev": "npm run set:dev && docker-compose up --build",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^8.0.0",
@@ -20,22 +23,29 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.4",
     "morgan": "~1.9.1",
+    "node-fetch": "^2.6.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pm2": "^4.2.3"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "prettier": "^1.19.1"
   },
   "main": "index.js",
   "author": "Husnul Anwari <husnulhamidiah@gmail.com>",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "pre-commit": [
+    "precommit-msg",
+    "lint"
+  ]
 }
