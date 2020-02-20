@@ -2,7 +2,9 @@ import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 
 export const get = async (req, res) => {
-  const doc = await fetch(req.query.url)
+  const url = decodeURIComponent(req.query.url);
+  console.log('retrieve', url);
+  const doc = await fetch(url)
     .then(doc => doc.text())
     .catch(console.error);
 
@@ -11,6 +13,7 @@ export const get = async (req, res) => {
 
   res.json({
     title,
+    doc,
   });
 };
 
