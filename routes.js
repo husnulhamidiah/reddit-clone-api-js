@@ -5,6 +5,7 @@ import posts from './controllers/posts';
 import comments from './controllers/comments';
 import category from './controllers/category';
 import retrieve from './controllers/retrieve';
+import rss from './controllers/rss';
 
 const wrap = fn => (...args) => fn(...args).catch(args[2]);
 
@@ -15,6 +16,7 @@ router.post('/register', users.validate, wrap(users.register));
 
 router.param('post', posts.load);
 router.get('/posts', posts.list);
+router.get('/posts/rss', rss.list);
 router.get('/posts/:category', posts.listByCategory);
 router.get('/post/:post', posts.show);
 router.post('/posts', jwtAuth, posts.validate, wrap(posts.create));
