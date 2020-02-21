@@ -18,6 +18,7 @@ router.param('post', posts.load);
 router.get('/posts', posts.list);
 router.get('/posts/rss', rss.list);
 router.get('/posts/:category', posts.listByCategory);
+router.get('/posts/:category/rss', rss.listByCategory);
 router.get('/post/:post', posts.show);
 router.post('/posts', jwtAuth, posts.validate, wrap(posts.create));
 router.delete('/post/:post', jwtAuth, postAuth, posts.destroy);
