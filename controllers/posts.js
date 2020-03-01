@@ -24,7 +24,9 @@ export const show = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  const posts = await Post.find().sort('-score');
+  const posts = await Post.find()
+    .populate('category')
+    .sort('-score');
   res.json(posts);
 };
 
