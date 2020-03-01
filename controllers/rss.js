@@ -2,13 +2,14 @@ import RSS from 'rss';
 import Post from '../models/post';
 import Category from '../models/category';
 
-export const listByCategory = async(req, res) => {
+export const listByCategory = async (req, res) => {
   const name = req.params.category;
   const category = await Category.find({ name });
   const posts = await Post.find({ category })
     .populate('author')
     .populate('category')
-    .sort('-created');
+    .sort('-created')
+    .limit(20);
   const feed = new RSS({
     title: `upvotocracy.com/a/${name} RSS feed`,
     description: `Zero moderation Reddit clone: ${category.description || ''}`,
@@ -22,7 +23,7 @@ export const listByCategory = async(req, res) => {
   });
 
   posts.map(item => {
-    const { title, category } = item;
+    const { title, category, text } = item;
     const categories = [category.name];
     const author = item.author.username;
     const url = `https://upvotocracy.com/a/${category.name}/${item._id}`;
@@ -34,6 +35,7 @@ export const listByCategory = async(req, res) => {
       categories, // optional - array of item categories
       author, // optional - defaults to feed author property
       date: item.created, // any format that js Date can parse.
+      description: text || '',
     });
   });
 
@@ -42,13 +44,13 @@ export const listByCategory = async(req, res) => {
   res.send(xml);
 };
 
-
 export const list = async (req, res) => {
   console.log('here');
   const posts = await Post.find()
     .populate('author')
     .populate('category')
-    .sort('-created');
+    .sort('-created')
+    .limit(20);
   const feed = new RSS({
     title: 'upvotocracy.com RSS feed',
     description: 'Zero moderation Reddit clone.',
