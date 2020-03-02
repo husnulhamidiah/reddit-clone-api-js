@@ -52,7 +52,10 @@ export const create = async (req, res, next) => {
   const post = await Post.create({
     title, url, author, category, type, text,
   });
-  res.status(201).json(post);
+  const newPost = await Post.findById(post.id)
+    .populate('category');
+
+  res.status(201).json(newPost);
 };
 
 export const validate = async (req, res, next) => {
