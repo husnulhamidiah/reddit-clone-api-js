@@ -3,12 +3,14 @@ import Post from '../models/post';
 import Category from '../models/category';
 
 export const listByCategory = async (req, res) => {
+  const { sort = '+created' } = req.query;
+  console.log(sort, 'sort');
   const name = req.params.category;
   const category = await Category.find({ name });
   const posts = await Post.find({ category })
     .populate('author')
     .populate('category')
-    .sort('-created')
+    .sort(sort)
     .limit(20);
   const feed = new RSS({
     title: `upvotocracy.com/a/${name} RSS feed`,
@@ -45,11 +47,13 @@ export const listByCategory = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  console.log('here');
+  const { sort = '+created' } = req.query;
+  console.log(sort, 'sort');
+
   const posts = await Post.find()
     .populate('author')
     .populate('category')
-    .sort('-created')
+    .sort(sort)
     .limit(20);
   const feed = new RSS({
     title: 'upvotocracy.com RSS feed',
