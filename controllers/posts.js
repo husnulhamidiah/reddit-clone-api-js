@@ -24,23 +24,31 @@ export const show = async (req, res) => {
 };
 
 export const list = async (req, res) => {
+  const { sort = '-score' } = req.query;
   const posts = await Post.find()
     .populate('category')
-    .sort('-score');
+    .sort(sort)
+    .limit(100);
   res.json(posts);
 };
 
 export const listByCategory = async (req, res) => {
+  const { sort = '-score' } = req.query;
   const name = req.params.category;
   const category = await Category.find({ name });
-  const posts = await Post.find({ category }).sort('-score');
+  const posts = await Post.find({ category })
+    .sort(sort)
+    .limit(100);
   res.json(posts);
 };
 
 export const listByUser = async (req, res) => {
+  const { sort = '-score' } = req.query;
   const username = req.params.user;
   const author = await User.findOne({ username });
-  const posts = await Post.find({ author: author.id }).sort('-created');
+  const posts = await Post.find({ author: author.id })
+    .sort(sort)
+    .limit(100);
   res.json(posts);
 };
 
