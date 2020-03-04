@@ -35,13 +35,17 @@ postSchema.options.toJSON.transform = (doc, ret) => {
   return obj;
 };
 
-postSchema.virtual('upvotePercentage').get(function () {
+postSchema.virtual('upvotePercentage').get(function() {
   if (this.votes.length === 0) return 0;
   const upvotes = this.votes.filter(vote => vote.vote === 1);
   return Math.floor((upvotes.length / this.votes.length) * 100);
 });
 
-postSchema.methods.vote = function (user, vote) {
+postSchema.virtual('commentCount').get(function() {
+  return Number(this.comments.length);
+});
+
+postSchema.methods.vote = function(user, vote) {
   const existingVote = this.votes.find(item => item.user._id.equals(user));
 
   if (existingVote) {
@@ -64,30 +68,32 @@ postSchema.methods.vote = function (user, vote) {
   return this.save();
 };
 
-postSchema.methods.addComment = async function (author, body) {
+postSchema.methods.addComment = async function(author, body) {
   const _id = new mongoose.Types.ObjectId();
   this.comments.push({ _id, author, body });
   const content = await this.save();
-  return {content, _id}
+  return { content, _id };
 };
 
-postSchema.methods.removeComment = function (id) {
+postSchema.methods.removeComment = function(id) {
   const comment = this.comments.id(id);
   if (!comment) throw new Error('Comment not found');
   comment.remove();
   return this.save();
 };
 
-postSchema.pre(/^find/, function () {
-  this.populate('author').populate('comments.author').populate('category');
+postSchema.pre(/^find/, function() {
+  this.populate('author')
+    .populate('comments.author')
+    .populate('category');
 });
 
-postSchema.pre('save', function (next) {
+postSchema.pre('save', function(next) {
   this.wasNew = this.isNew;
   next();
 });
 
-postSchema.post('save', function (doc, next) {
+postSchema.post('save', function(doc, next) {
   if (this.wasNew) this.vote(this.author._id, 1);
   doc
     .populate('author')
