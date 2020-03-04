@@ -22,7 +22,7 @@ export const show = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  const cutoff = Date.now() - 86400 * 7 * 1000;
+  const cutoff = Date.now() - 86400 * 14 * 1000;
   const { sort = '-created' } = req.query;
   const posts = await Post.find({ created: { $gt: new Date(cutoff) } })
     .populate('category')
@@ -33,7 +33,7 @@ export const list = async (req, res) => {
 };
 
 export const listByCategory = async (req, res) => {
-  const cutoff = Date.now() - 86400 * 7 * 1000;
+  const cutoff = Date.now() - 86400 * 14 * 1000;
   const { sort = '-score' } = req.query;
   const name = req.params.category;
   const category = await Category.find({ name });
