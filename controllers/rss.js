@@ -5,7 +5,6 @@ import User from '../models/user';
 
 export const listByCategory = async (req, res) => {
   const { sort = '-created' } = req.query;
-  console.log(sort, 'sort');
   const name = req.params.category;
   const category = await Category.find({ name });
   const posts = await Post.find({ category })
@@ -49,8 +48,6 @@ export const listByCategory = async (req, res) => {
 
 export const list = async (req, res) => {
   const { sort = '-created' } = req.query;
-  console.log(sort, 'sort');
-
   const posts = await Post.find()
     .populate('author')
     .populate('category')
