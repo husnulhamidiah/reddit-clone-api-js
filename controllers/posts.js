@@ -54,7 +54,7 @@ export const listByUser = async (req, res) => {
 };
 
 export const create = async (req, res, next) => {
-  const { title, url, category, type, text } = req.body;
+  const { title, url, category, type, text, thumb } = req.body;
   const author = req.user.id;
   const post = await Post.create({
     title,
@@ -63,6 +63,7 @@ export const create = async (req, res, next) => {
     category,
     type,
     text,
+    thumb,
   });
   const newPost = await Post.findById(post.id).populate('category');
 

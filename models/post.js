@@ -16,6 +16,7 @@ commentSchema.options.toJSON.transform = (doc, ret) => {
 const postSchema = new Schema({
   title: { type: String, required: true },
   url: { type: String },
+  thumb: { type: String },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   score: { type: Number, default: 0 },

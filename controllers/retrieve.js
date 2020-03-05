@@ -10,10 +10,12 @@ export const get = async (req, res) => {
 
   const $ = cheerio.load(doc);
   const title = $('title').text();
+  const thumb = $('meta[property="og:image"]').attr('content') || $('meta["twitter:image"]').attr('content');
 
   res.json({
     title,
     doc,
+    thumb,
   });
 };
 
