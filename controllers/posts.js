@@ -67,7 +67,8 @@ export const create = async (req, res, next) => {
     thumb,
   });
   const newPost = await Post.findById(post.id).populate('category');
-  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 10 } });
+  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 5 } });
+  await User.findOneAndUpdate({ _id: newPost.category.owner }, { $inc: { karma: 5 } });
 
   res.status(201).json(newPost);
 };
