@@ -18,6 +18,7 @@ export const load = async (req, res, next, id) => {
 
 export const show = async (req, res) => {
   const post = await Post.findByIdAndUpdate(req.post.id, { $inc: { views: 1 } }, { new: true });
+  await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: 1 } });
   res.json(post);
 };
 
@@ -66,6 +67,7 @@ export const create = async (req, res, next) => {
     thumb,
   });
   const newPost = await Post.findById(post.id).populate('category');
+  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 10 } });
 
   res.status(201).json(newPost);
 };
@@ -135,11 +137,14 @@ export const validate = async (req, res, next) => {
 
 export const upvote = async (req, res) => {
   const post = await req.post.vote(req.user.id, 1);
+  await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: 1 } });
+
   res.json(post);
 };
 
 export const downvote = async (req, res) => {
   const post = await req.post.vote(req.user.id, -1);
+  await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: -2 } });
   res.json(post);
 };
 

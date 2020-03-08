@@ -1,10 +1,13 @@
 import { body, validationResult } from 'express-validator';
 import Category from '../models/category';
+import User from '../models/user';
 
 export const create = async (req, res, next) => {
   const { name, description } = req.body;
   const owner = req.user.id;
   const category = await Category.create({ name, description, owner });
+  await User.findOneAndUpdate({ _id: req.user.id }, { $inc: { karma: 10 } });
+
   res.status(201).json(category);
 };
 
@@ -52,10 +55,12 @@ export const validate = async (req, res, next) => {
     }),
   );
 
-  await Promise.all(validations.map(validation => {
-    if (!('run' in validation)) return;
-    return validation.run(req);
-  }));
+  await Promise.all(
+    validations.map(validation => {
+      if (!('run' in validation)) return;
+      return validation.run(req);
+    }),
+  );
 
   const errors = validationResult(req);
   if (errors.isEmpty()) return next();

@@ -9,7 +9,7 @@ export const login = (req, res, next) => {
 
 export const register = async (req, res, next) => {
   const { username, password } = req.body;
-  const user = await User.create({ username, password });
+  const user = await User.create({ username, password, karma: 100 });
   const token = createAuthToken(user.toJSON());
   res.status(201).json({ token });
 };
