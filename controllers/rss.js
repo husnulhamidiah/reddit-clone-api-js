@@ -4,11 +4,11 @@ import Category from '../models/category';
 import User from '../models/user';
 
 export const listByCategory = async (req, res) => {
-  const cutoff = Date.now() - 86400 * 14 * 1000;
+  // const cutoff = Date.now() - 86400 * 14 * 1000;
   const { sort = '-created' } = req.query;
   const name = req.params.category;
   const category = await Category.find({ name });
-  const posts = await Post.find({ category, created: { $gt: new Date(cutoff) } })
+  const posts = await Post.find({ category })
     .populate('author')
     .populate('category')
     .sort(sort)
@@ -48,9 +48,9 @@ export const listByCategory = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  const cutoff = Date.now() - 86400 * 14 * 1000;
+  // const cutoff = Date.now() - 86400 * 14 * 1000;
   const { sort = '-created' } = req.query;
-  const posts = await Post.find({ created: { $gt: new Date(cutoff) } })
+  const posts = await Post.find()
     .populate('author')
     .populate('category')
     .sort(sort)
@@ -89,11 +89,11 @@ export const list = async (req, res) => {
 };
 
 export const listByUser = async (req, res) => {
-  const cutoff = Date.now() - 86400 * 14 * 1000;
+  // const cutoff = Date.now() - 86400 * 14 * 1000;
   const { sort = '-score' } = req.query;
   const username = req.params.user;
   const author = await User.findOne({ username });
-  const posts = await Post.find({ author: author.id, created: { $gt: new Date(cutoff) } })
+  const posts = await Post.find({ author: author.id })
     .sort(sort)
     .limit(20);
 
