@@ -13,7 +13,6 @@ const router = Router();
 
 router.post('/login', users.validate, users.login);
 router.post('/register', users.validate, wrap(users.register));
-
 router.param('post', posts.load);
 router.get('/posts', posts.list);
 router.get('/posts/rss', rss.list);
@@ -36,6 +35,7 @@ router.delete('/post/:post/:comment', jwtAuth, commentAuth, comments.destroy);
 router.get('/inbox', jwtAuth, users.inbox);
 router.delete('/inbox/:id', jwtAuth, users.deleteInbox);
 router.get('/inbox/count', jwtAuth, users.inboxCount);
+router.get('/leaderboard', users.getAll);
 
 router.use('*', (req, res) => res.status(404).json({ message: 'not found' }));
 router.use((err, req, res, next) => res.status(500).json({ errors: err.message }));

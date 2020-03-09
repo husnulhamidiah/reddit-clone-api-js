@@ -1,16 +1,22 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const userSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  admin: Boolean,
-  karma: { type: Number, default: 0 },
-  inbox: [{
-    comment: Schema.Types.ObjectId,
-    read: Boolean,
-  }],
-}, { collation: { locale: 'en', strength: 1 } });
+const userSchema = new Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    admin: Boolean,
+    karma: { type: Number, default: 0 },
+    inbox: [
+      {
+        comment: Schema.Types.ObjectId,
+        read: Boolean,
+      },
+    ],
+    created: { type: Date, default: Date.now },
+  },
+  { collation: { locale: 'en', strength: 1 } },
+);
 
 userSchema.set('toJSON', { getters: true });
 userSchema.options.toJSON.transform = (doc, ret) => {
@@ -21,12 +27,12 @@ userSchema.options.toJSON.transform = (doc, ret) => {
   return obj;
 };
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-userSchema.methods.isValidPassword = async function (password) {
+userSchema.methods.isValidPassword = async function(password) {
   const match = await bcrypt.compare(password, this.password);
   return match;
 };

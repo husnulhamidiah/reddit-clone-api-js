@@ -7,6 +7,14 @@ export const login = (req, res, next) => {
   localAuth(req, res, next);
 };
 
+export const getAll = async (req, res) => {
+  const leaders = await User.find({ karma: { $gt: 100 } })
+    .select('-inbox')
+    .sort('-karma');
+
+  res.json({ leaders });
+};
+
 export const register = async (req, res, next) => {
   const { username, password } = req.body;
   const user = await User.create({ username, password, karma: 100 });
@@ -55,10 +63,12 @@ export const validate = async (req, res, next) => {
     );
   }
 
-  await Promise.all(validations.map(validation => {
-    if (!('run' in validation)) return;
-    return validation.run(req);
-  }));
+  await Promise.all(
+    validations.map(validation => {
+      if (!('run' in validation)) return;
+      return validation.run(req);
+    }),
+  );
 
   const errors = validationResult(req);
   if (errors.isEmpty()) return next();
@@ -71,8 +81,11 @@ export const inbox = async (req, res) => {
   const user = await User.findOne({ _id: req.user.id });
 
   for (let i = 0; i < user.inbox.length; i += 1) {
-    const post = await Post.findOne({ 'comments._id': user.inbox[i].comment }, { comments: { $elemMatch: { _id: user.inbox[i].comment } }, title: '' });
- 
+    const post = await Post.findOne(
+      { 'comments._id': user.inbox[i].comment },
+      { comments: { $elemMatch: { _id: user.inbox[i].comment } }, title: '' },
+    );
+
     if (post != null) {
       const link = `/a/${post.category.name}/${post._id}#comment-id-${post.comments[0].id}`;
       const com = {
@@ -88,7 +101,10 @@ export const inbox = async (req, res) => {
       comments.push(com);
     } else {
       // delete from inbox if comment doesn't exist anymore
-      await User.updateOne({ 'inbox.comment': user.inbox[i].comment }, { $pull: { inbox: { comment: user.inbox[i].comment } } });
+      await User.updateOne(
+        { 'inbox.comment': user.inbox[i].comment },
+        { $pull: { inbox: { comment: user.inbox[i].comment } } },
+      );
     }
   }
   comments = comments.reverse();
@@ -96,8 +112,10 @@ export const inbox = async (req, res) => {
 };
 
 export const deleteInbox = async (req, res) => {
-  await User.updateOne({ _id: req.user.id, 'inbox.comment': req.params.id }, { $pull: { inbox: { comment: req.params.id } } })
-    .catch(() => res.status(500).send());
+  await User.updateOne(
+    { _id: req.user.id, 'inbox.comment': req.params.id },
+    { $pull: { inbox: { comment: req.params.id } } },
+  ).catch(() => res.status(500).send());
   res.status(200).send();
 };
 
@@ -114,4 +132,5 @@ export default {
   inbox,
   deleteInbox,
   inboxCount,
+  getAll,
 };
