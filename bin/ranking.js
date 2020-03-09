@@ -92,7 +92,8 @@ function getRankedItems(callback) {
         console.log(err);
         return callback(err);
       }
-      console.log('ranked')
+      console.log('ranked', results)
+      process.exit(0);
     }
   ); //end Items.aggregate
 }
