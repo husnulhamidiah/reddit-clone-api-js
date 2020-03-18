@@ -6,7 +6,7 @@ const userSchema = new Schema(
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     admin: Boolean,
-    karma: { type: Number, default: 0 },
+    karma: { type: Number, default: 0, index: true },
     inbox: [
       {
         comment: Schema.Types.ObjectId,

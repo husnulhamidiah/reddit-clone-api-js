@@ -9,7 +9,7 @@ export const get = async (req, res) => {
     .catch(console.error);
 
   const $ = cheerio.load(doc);
-  const $thumb = $('meta[property="og:image"]') || $('meta[property="twitter:image"]'); 
+  const $thumb = $('meta[property="og:image"]') || $('meta[property="twitter:image"]');
   const title = $('title').text();
   const thumb = $thumb && $thumb.attr('content');
 

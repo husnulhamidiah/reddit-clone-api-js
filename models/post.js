@@ -22,14 +22,14 @@ const postSchema = new Schema({
   thumb: { type: String },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-  score: { type: Number, default: 0 },
+  score: { type: Number, default: 0, index: true },
   votes: [{ user: Schema.Types.ObjectId, vote: Number, _id: false }],
   comments: [commentSchema],
-  created: { type: Date, default: Date.now },
-  views: { type: Number, default: 0 },
+  created: { type: Date, default: Date.now, index: true },
+  views: { type: Number, default: 0, index: true },
   type: { type: String, default: 'link', required: true },
   text: { type: String },
-  ranking: { type: Number, default: 1},
+  ranking: { type: Number, default: 1, index: true },
 });
 
 postSchema.set('toJSON', { getters: true, virtuals: true });
