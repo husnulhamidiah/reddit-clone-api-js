@@ -13,7 +13,7 @@ const userSchema = new Schema(
         read: Boolean,
       },
     ],
-    created: { type: Date, default: Date.now },
+    created: { type: Date },
   },
   { collation: { locale: 'en', strength: 1 } },
 );
@@ -24,11 +24,13 @@ userSchema.options.toJSON.transform = (doc, ret) => {
   delete obj._id;
   delete obj.__v;
   delete obj.password;
+
   return obj;
 };
 
 userSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, 10);
+  this.created = Date.now();
   next();
 });
 
