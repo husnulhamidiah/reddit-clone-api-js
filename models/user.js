@@ -30,7 +30,9 @@ userSchema.options.toJSON.transform = (doc, ret) => {
 
 userSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, 10);
-  this.created = Date.now();
+  if (!this.created) {
+    this.created = Date.now();
+  }
   next();
 });
 
