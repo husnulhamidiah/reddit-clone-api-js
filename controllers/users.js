@@ -76,6 +76,15 @@ export const validate = async (req, res, next) => {
   res.status(422).json({ errors: errors.array({ onlyFirstError: true }) });
 };
 
+export const getByUsername = async (req, res) => {
+  const { username } = req.params;
+  const user = await User.findOne({ username })
+    .select('-inbox')
+    .catch(console.error);
+
+  res.send(user);
+};
+
 export const inbox = async (req, res) => {
   let comments = [];
   const user = await User.findOne({ _id: req.user.id });
@@ -133,4 +142,5 @@ export default {
   deleteInbox,
   inboxCount,
   getAll,
+  getByUsername,
 };
