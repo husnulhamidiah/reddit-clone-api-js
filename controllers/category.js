@@ -18,7 +18,8 @@ export const list = async (req, res) => {
 
 export const fetchCategory = async (req, res) => {
   const name = req.params.categoryName;
-  const category = await Category.findOne({ name });
+  const category = await Category.findOne({ name }).populate({ path: 'owner', select: '-inbox' });
+
   res.json(category);
 };
 
@@ -78,5 +79,5 @@ export default {
   create,
   list,
   validate,
-  fetchCategory
+  fetchCategory,
 };

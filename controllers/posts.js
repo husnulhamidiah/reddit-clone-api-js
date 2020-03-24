@@ -92,7 +92,10 @@ export const list = async (req, res) => {
 
 export const create = async (req, res, next) => {
   const { title, url, category, type, text, thumb } = req.body;
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  
   const author = req.user.id;
+  console.log(ip, author);
   const post = await Post.create({
     title,
     url,
@@ -102,8 +105,10 @@ export const create = async (req, res, next) => {
     text,
     thumb,
   });
+
   const newPost = await Post.findById(post.id).populate('category');
-  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 5 } });
+  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 5 }, ip })
+    .catch(console.error);
   await User.findOneAndUpdate({ _id: newPost.category.owner }, { $inc: { karma: 5 } });
 
   res.status(201).json(newPost);

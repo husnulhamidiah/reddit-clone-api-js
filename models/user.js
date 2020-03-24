@@ -14,6 +14,7 @@ const userSchema = new Schema(
       },
     ],
     created: { type: Date },
+    ip: { type: String },
   },
   { collation: { locale: 'en', strength: 1 } },
 );
@@ -24,6 +25,7 @@ userSchema.options.toJSON.transform = (doc, ret) => {
   delete obj._id;
   delete obj.__v;
   delete obj.password;
+  delete obj.ip;
 
   return obj;
 };
