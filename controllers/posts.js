@@ -23,8 +23,8 @@ export const show = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  let posts
-  let search = {}
+  let posts;
+  let search = {};
   let skip = req.query.page > 0 ? req.query.page * 15 : 0;
 
   if (typeof req.params.category !== 'undefined') {
@@ -47,55 +47,54 @@ export const list = async (req, res) => {
       .skip(skip)
       .limit(15);
   } else {
-
     posts = await Post.aggregate([
       { $match: search },
       {
         $lookup: {
-            from: "users",
-            localField: "author",
-            foreignField: "_id",
-            as: "author"
-        }
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'author',
+        },
       },
       {
-        $unwind: '$author'
+        $unwind: '$author',
       },
-      { $unset: "author.password" },
+      { $unset: 'author.password' },
       {
         $lookup: {
-            from: "categories",
-            localField: "category",
-            foreignField: "_id",
-            as: "category"
-        }
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category',
+        },
       },
       {
-        $unwind: '$category'
+        $unwind: '$category',
       },
       {
-        $addFields: { comments_count: {$size: { "$ifNull": [ "$comments", [] ] } }}
+        $addFields: { comments_count: { $size: { $ifNull: ['$comments', []] } } },
       },
       {
-        $addFields: { id: '$_id' }
+        $addFields: { id: '$_id' },
       },
-      { $unset: "_id" },
-      { $sort: { "comments_count": -1 } },
-      { $skip: skip},
-      { $limit: 15},
-    ])
+      { $unset: '_id' },
+      { $sort: { comments_count: -1 } },
+      { $skip: skip },
+      { $limit: 15 },
+    ]);
   }
   const count = await Post.countDocuments(search);
-  const more = count > (skip * 2) && count > 15 ? true : false;
+  const more = count > skip * 2 && count > 15 ? true : false;
   res.json({ posts, more });
 };
 
 export const create = async (req, res, next) => {
   const { title, url, category, type, text, thumb } = req.body;
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  
+
   const author = req.user.id;
-  console.log(ip, author);
+  console.log(ip, author, title);
   const post = await Post.create({
     title,
     url,
@@ -104,12 +103,16 @@ export const create = async (req, res, next) => {
     type,
     text,
     thumb,
+  }).catch(err => {
+    console.error(err);
+    res.status(422).json(err);
   });
 
-  const newPost = await Post.findById(post.id).populate('category');
-  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 5 }, ip })
+  const newPost = await Post.findById(post.id)
+    .populate('category')
     .catch(console.error);
-  await User.findOneAndUpdate({ _id: newPost.category.owner }, { $inc: { karma: 5 } });
+  await User.findOneAndUpdate({ _id: author }, { $inc: { karma: 5 }, ip }).catch(console.error);
+  await User.findOneAndUpdate({ _id: newPost.category.owner }, { $inc: { karma: 5 } }).catch(console.error);
 
   res.status(201).json(newPost);
 };
@@ -123,7 +126,7 @@ export const validate = async (req, res, next) => {
       .isLength({ min: 1 })
       .withMessage('cannot be blank')
 
-      .isLength({ max: 100 })
+      .isLength({ max: 200 })
       .withMessage('must be at most 100 characters long')
 
       .custom(value => value.trim() === value)
