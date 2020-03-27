@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 
 export const createAuthToken = user => {
+  delete user.inbox;
   return jwt.sign({ user }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
