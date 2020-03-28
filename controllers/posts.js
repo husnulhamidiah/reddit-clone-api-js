@@ -189,7 +189,7 @@ export const upvote = async (req, res) => {
 
 export const downvote = async (req, res) => {
   const post = await req.post.vote(req.user.id, -1);
-  await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: -2 } });
+  await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: -25 } });
   res.json(post);
 };
 
