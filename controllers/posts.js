@@ -183,6 +183,7 @@ export const validate = async (req, res, next) => {
 export const upvote = async (req, res) => {
   const post = await req.post.vote(req.user.id, 1);
   await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: 1 } });
+  await User.findOneAndUpdate({ _id: req.user.id }, { $inc: { karma: 1 } });
 
   res.json(post);
 };
@@ -190,6 +191,8 @@ export const upvote = async (req, res) => {
 export const downvote = async (req, res) => {
   const post = await req.post.vote(req.user.id, -1);
   await User.findOneAndUpdate({ _id: post.author.id }, { $inc: { karma: -25 } });
+  await User.findOneAndUpdate({ _id:req.user.id }, { $inc: { karma: 1 } });
+  
   res.json(post);
 };
 
